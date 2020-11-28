@@ -8,6 +8,9 @@
 import UIKit
 import SafariServices
 
+// 今までの書き方（＝FatViewController）と異なり、ViewController内には表示の設定方法と
+// ユーザー操作時の関数呼び出しのみを記述する
+
 final class ViewController: UIViewController{
     
     private var presenter: PresenterInput!
@@ -36,6 +39,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
         
+        // 対応する記事情報はプレゼンターが持っている
         let item = presenter.item(forRow: indexPath.row)
         cell.textLabel?.text = item?.title
         
@@ -43,6 +47,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ table: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // タップ時の処理内容はプレゼンターに任せる
         presenter.didSelectRow(at: indexPath)
         tableView.deselectRow(at: indexPath, animated: true)
     }

@@ -7,6 +7,7 @@
 
 import Foundation
 
+// 記事の情報を表現するクラス
 class Item {
     var title: String?
     var url: String?

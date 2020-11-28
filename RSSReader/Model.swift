@@ -7,25 +7,36 @@
 
 import Foundation
 
+// モデルが持つべきメソッドやプロパティを定義
 protocol ModelInput {
     func fetchItem(completion: @escaping ([Item]?)->())
 }
 
 final class Model: NSObject, ModelInput {
+    
+    // xmlの読み取りに必要な定数（要素名）
     private let ITEM_ELEMENT_NAME = "item"
     private let TITLE_ELEMENT_NAME = "title"
     private let LINK_ELEMENT_NAME   = "link"
+    
+    // 現在対象にしている要素名を保持する変数
     var currentParseElementName: String!
     
+    // パース結果を保持するItem型の配列
     var items: [Item] = []
 
+    // RSSフィードから返されるxmlをパースする関数
+    // パース結果をクロージャに渡すことで呼び出し側で利用できるようにする
     func fetchItem(completion: @escaping ([Item]?)->()) {
         
+        // 対象のRSSフィードのURL
         let url: URL = URL(string:"https://zenn.dev/feed")!
         
         let task = URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
             let parser: XMLParser? = XMLParser(data: data!)
             parser!.delegate = self
+            
+            // パース処理の中身はDelegateメソッドが実行する
             parser!.parse()
             
             completion(self.items)
@@ -36,6 +47,7 @@ final class Model: NSObject, ModelInput {
     
 }
 
+// XMLパーサでのパース処理を記述したExtension
 extension Model: XMLParserDelegate {
     
     //解析_開始時
